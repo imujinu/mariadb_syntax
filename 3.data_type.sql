@@ -1,0 +1,42 @@
+-- tinyint : -128~127까지 표현
+-- author 테이블에 age 컬럼 변경
+alter table author modify column age tinyint;
+
+
+-- int : 4바이트 (대략, 40억 숫자범위)
+
+-- bigint : 8바이트
+-- author, post 테이블의 id값 bigint변경
+alter table author,post modify column id bigint primary key;
+
+-- decimal(총자릿수, 소수부자릿수)
+alter table post add column price decimal(10,3);
+-- decimal 소숫점 초과 시 짤림현상발생생
+insert into post(id, title, price, author_id) values(5, 'hello python',10.33412, );
+
+-- 문자타입 : 고정길이(char), 가변길이(varchar, text)
+alter table author add column gender gender(10);
+alter table author add column self_introduction text;
+
+-- blob(바이너리데이터) 타입 실습
+-- 일반적으로 blob을 저장하기 보다, varchar로 설계하고 이미지경로만을 저장함. 
+alter table author add column profile_image longblob;
+insert into author(id, email, profile_image) values(8, 'aaa@naver.com', LOAD_FILE('"C:\\강아지.png"'))
+
+-- enum : 삽입될 수 있는 데이터의 종류를 한정하는 데이터 타입
+-- role컬럼 추가
+alter table author add column role ENUM('user','admin');
+-- enum에 지정된 값이 아닌 경우
+insert into author(id, email, role) values(10, 'sss@naver.com', 'hello');
+-- role을 지정 안한 경우
+insert into author(id, email) values(10, 'sss@naver.com');
+-- enum에 지정된 값인 경우
+insert into author(id, email, role) values(11, 'sss@naver.com', 'admin')
+
+-- date와 datetime
+-- 날짜타입의 입력, 수정, 조회시에 문자열 형식을 사용
+alter table author add column birthday date;
+alter table post add column created_time datetime;
+insert into post(id, title, author_id ) values(7, 'hello', 3);
+alter table post add column created_time datetime default current_timestamp();
+
