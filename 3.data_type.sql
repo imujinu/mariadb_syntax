@@ -44,6 +44,9 @@ alter table post add column created_time datetime default current_timestamp();
 select * from author where id >=2 and id<=4;
 select * from author where id >=2 and id<=4;
 select * from author where id in (2,3,4);
+select * from author where id in (1, 3 ,5);
+select * from post where author_id in (select id from author where name = 'hong1');
+select * from post where author_id in ('hong1');
 
 -- like : 특정 문자를 포함하는 데이터를 조회하기 위한 키워드
 select * from post where title like 'h%';
