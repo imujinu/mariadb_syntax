@@ -26,7 +26,7 @@ BEGIN
     insert into post(title, author_id) values ('hello world', 1);
     select post_count into count from author where id=1;
     do sleep(15);
-    update author set post_count=count+1 where id=3;
+    update author set post_count=count+1 where id=1;
     commit;
 END//
 DELIMITER ; 
@@ -36,6 +36,23 @@ DELIMITER ;
     select post_count from author where id=1;
 
 -- lost update 문제 해결 : select for update 시에 트랜잭션이 종료후에 특정 행에 대한 lock 풀림
+
+DELIMITER //
+CREATE PROCEDURE concurrent_test2()
+BEGIN
+    declare count int; 
+    start transaction;
+    insert into post(title, author_id) values ('hello world', 1);
+    select post_count into count from author where id=1 for update;
+    do sleep(15);
+    update author set post_count=count+1 where id=1 for;
+    commit;
+END//
+DELIMITER ;
+
+-- 터미널에서는 아래코드 실행
+    
+    select post_count from author where id=1 for update;
 
 -- serializable : 모든 트랜잭션 순차적 실행 - > 동시성 문제 없음 (성능저하)
 
