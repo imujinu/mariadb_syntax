@@ -35,3 +35,60 @@ select p.*, a.email from post p inner join author a on p.author_id = a.id where 
 select p.* from post p left join author a on p.author_id = a.id where a.name is not null;
 
 -- 조건에 맞는 도서와 저자 리스트 출력
+
+-- 업성진 기록 찾기
+
+-- union : 두 테이블의 select 결과를 횡으로 결합 (기본적으로 distinct 적용)
+-- union 시킬 때 컬럼의 개수와 컬럼의 타입이 같아야함 
+select name, email from author union select title,content from post;
+
+-- union all : 중복까지 모두 포함
+select name, email from author union all select title,content from post;
+
+-- 서브쿼리 : select 문 안에 또 다른 select문을 서브쿼리라 한다. 
+select 컬럼 from 테이블 where 조건 
+
+--where절 안에 서브쿼리
+--한번이라고 글을 쓴 author 목록 조회
+select distinct a.* from author a inner join post p on a.id=p.author_id; 
+-- null 값은 in 조건절에서 자동으로 조회 
+select * from author where id in(select author_id from post);
+
+--컬럼 위치에 서브쿼리
+-- author의 email과 author별로 본인의 쓴 글의 개수를 출력
+select a.email, (select count(*) from post p where p.author_id = a.id) from author a;
+
+--from절 위치에 서브쿼리
+select a.* from (select * from author where id> 5) as a;
+
+-- group by 컬럼명 : 특정 컬럼으로 데이터를 그릅화 하여, 하나의 행(row) 처럼 취급한다. 
+select author_id from post group by author_id;
+-- 보통 아래와 같이 집계함수와 많이 사용한다. 
+select author_id, count(*) from post group by author_id;
+
+-- 집계함수
+-- null은 count에서 제외
+select count(*) from author; 
+select sum(price) from post;
+select avg(price) from post;
+--소수점 3번째 자리에서 반올림
+select round(avg(price),3) from post;
+
+--group by와 집계함수
+select author_id, count(*) as count, sum(price) from post group by author_id having count > 3;
+
+-- where와 group by
+-- where는 전체 데이터에 대한 필터링 이기 때문에 group by와는 상관 없다 -- group by된 정보들에 대한 필터링은 having이다
+-- 셀프조인왜그해오
+-- 날짜별 post글의 갯수 출력:( 날짜값이 null은 제외)
+select date_format(created_time, "%Y-%m-%d")as day, count(*) from post where created_time is not null group by day;
+
+-- 자동차 종류 별 특정 옵션이 포함된 자동차 수 구하기
+-- 입양 시각 구하기(1)
+
+-- group by와 having
+-- having은 group by를 통해 나온 집계값에 대한 조건 
+-- 글을 2번 이상 쓴 사람에 대한 ID 찾기 
+select author_id as cnt from post group by author_id having count>=2;
+
+-- 동명 동물 수 찾기

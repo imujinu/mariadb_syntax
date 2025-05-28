@@ -78,3 +78,6 @@ select * from post where date_format(created_time, '%m') = '05';
 
 select * from post where cast(date_format(created_time, '%m') as unsigned) = '05';
 
+-- 다중열 group by 첫번째컬럼, 두번째컬럼 : 첫번째컬럼으로 먼저 grouping 이후에 두번째컬럼으로 grouping한다.
+-- post 테이블에서 작성자별로 만든 제목의 개수를 출력하시오 
+select author, title, count(*) from post group by author_id, title;
