@@ -155,3 +155,19 @@ begin
 end
 // delimiter ;
 -- 반복문을 통한 post 대량 생산
+delimiter //
+create procedure 대량글쓰기(in countInput bigint, in emailInput varchar(255))
+begin
+-- declare는 begin밑에 위치 
+    declare authorIdInput bigint;
+    declare postIdInput bigint;
+    declare countValue bigint default 0;
+    while countValue<countInput do
+        select id into authorIdInput from author where email = emailInput;
+        insert into post(title) values("안녕하세요");
+        select id into postIdInput from post order by id desc limit 1;
+        insert into author_post(author_id, post_id) values(authorIdInput, postIdInput);
+        set countValue = countValue+1;
+    end while;
+end 
+// delimiter ;
