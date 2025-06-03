@@ -122,3 +122,35 @@ sadd posting:likes:1 a1@naver.com
 smembers posting:likes:1
 
 # zset : sorted set 
+# zset을 활용해서 최근시간순으로 정렬가능
+# zset도 set이므로 같은 상품을 add할 경우에 중복이 제거되고, score(시간) 값만 업데아트 
+zadd user:1:recent:product 091330 mango
+zadd user:1:recent:product 091330 apple
+zadd user:1:recent:product 091331 orange
+zadd user:1:recent:product 091332 kiwi
+zadd user:1:recent:product 091333 grape
+zadd user:1:recent:product 091329 apple
+
+#zset 조회 : zrange(score기준오름차순), zrevrange(기준내림차순)
+zrange user:1:recent:product 0 2
+zrange user:1:recent:product -3 -1
+
+#withscore를 통해 score까지 같ㅇ ㅣ출력
+zrevrange user:1:recent:productr 0 2 withscores
+
+#종목 : 삼성전자, 시세 55000원, 시간 : 현재시간(유닉스타임스태프) -> 년월일시간을 초단위로 변환한것.
+zadd stock:price:se 1748911141 55000
+zadd stock:price:se 1748911141 55000
+zadd stock:price:se 1748911141 55000
+zadd stock:price:se 1748911141 55000
+zadd stock:price:se 1748911141 55000
+
+#삼성전자의 현재시세
+zreverange stock:price:lg 0 0
+zrange stock:price:lg -1 -1
+
+#hashes : value가 map 형태의 자료구조 
+ set member:info:1 "{\"name\":\"hong\", \"email\":\"hong@daum.net\", \"age\":30}" ex
+ hset member:info:1 name hong email hong@daum.net age 30
+ hgetall member:info:1
+ hset member:info:1 name hong2
